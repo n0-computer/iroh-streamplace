@@ -11,6 +11,7 @@ import (
 	"math"
 	"runtime"
 	"runtime/cgo"
+	"sync"
 	"sync/atomic"
 	"unsafe"
 )
@@ -333,6 +334,7 @@ func readFloat64(reader io.Reader) float64 {
 
 func init() {
 
+	FfiConverterDataHandlerINSTANCE.register()
 	uniffiCheckChecksums()
 }
 
@@ -349,6 +351,150 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_datahandler_handle_data()
+		})
+		if checksum != 61779 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_datahandler_handle_data: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_nodeaddr_direct_addresses()
+		})
+		if checksum != 17536 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_nodeaddr_direct_addresses: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_nodeaddr_equal()
+		})
+		if checksum != 15520 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_nodeaddr_equal: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_nodeaddr_node_id()
+		})
+		if checksum != 35476 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_nodeaddr_node_id: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_nodeaddr_relay_url()
+		})
+		if checksum != 18967 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_nodeaddr_relay_url: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_publickey_equal()
+		})
+		if checksum != 25030 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_publickey_equal: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_publickey_fmt_short()
+		})
+		if checksum != 57639 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_publickey_fmt_short: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_publickey_to_bytes()
+		})
+		if checksum != 8223 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_publickey_to_bytes: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_receiverendpoint_node_addr()
+		})
+		if checksum != 2125 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_receiverendpoint_node_addr: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_senderendpoint_add_peer()
+		})
+		if checksum != 63624 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_senderendpoint_add_peer: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_senderendpoint_node_addr()
+		})
+		if checksum != 56355 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_senderendpoint_node_addr: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_senderendpoint_send()
+		})
+		if checksum != 21989 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_senderendpoint_send: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_constructor_nodeaddr_new()
+		})
+		if checksum != 28044 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_constructor_nodeaddr_new: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_constructor_publickey_from_bytes()
+		})
+		if checksum != 51762 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_constructor_publickey_from_bytes: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_constructor_publickey_from_string()
+		})
+		if checksum != 2826 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_constructor_publickey_from_string: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_constructor_receiverendpoint_new()
+		})
+		if checksum != 30890 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_constructor_receiverendpoint_new: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_iroh_streamplace_checksum_constructor_senderendpoint_new()
 		})
 		if checksum != 37772 {
@@ -357,6 +503,37 @@ func uniffiCheckChecksums() {
 		}
 	}
 }
+
+type FfiConverterBool struct{}
+
+var FfiConverterBoolINSTANCE = FfiConverterBool{}
+
+func (FfiConverterBool) Lower(value bool) C.int8_t {
+	if value {
+		return C.int8_t(1)
+	}
+	return C.int8_t(0)
+}
+
+func (FfiConverterBool) Write(writer io.Writer, value bool) {
+	if value {
+		writeInt8(writer, 1)
+	} else {
+		writeInt8(writer, 0)
+	}
+}
+
+func (FfiConverterBool) Lift(value C.int8_t) bool {
+	return value != 0
+}
+
+func (FfiConverterBool) Read(reader io.Reader) bool {
+	return readInt8(reader) != 0
+}
+
+type FfiDestroyerBool struct{}
+
+func (FfiDestroyerBool) Destroy(_ bool) {}
 
 type FfiConverterString struct{}
 
@@ -407,6 +584,50 @@ func (FfiConverterString) Write(writer io.Writer, value string) {
 type FfiDestroyerString struct{}
 
 func (FfiDestroyerString) Destroy(_ string) {}
+
+type FfiConverterBytes struct{}
+
+var FfiConverterBytesINSTANCE = FfiConverterBytes{}
+
+func (c FfiConverterBytes) Lower(value []byte) C.RustBuffer {
+	return LowerIntoRustBuffer[[]byte](c, value)
+}
+
+func (c FfiConverterBytes) Write(writer io.Writer, value []byte) {
+	if len(value) > math.MaxInt32 {
+		panic("[]byte is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	write_length, err := writer.Write(value)
+	if err != nil {
+		panic(err)
+	}
+	if write_length != len(value) {
+		panic(fmt.Errorf("bad write length when writing []byte, expected %d, written %d", len(value), write_length))
+	}
+}
+
+func (c FfiConverterBytes) Lift(rb RustBufferI) []byte {
+	return LiftFromRustBuffer[[]byte](c, rb)
+}
+
+func (c FfiConverterBytes) Read(reader io.Reader) []byte {
+	length := readInt32(reader)
+	buffer := make([]byte, length)
+	read_length, err := reader.Read(buffer)
+	if err != nil {
+		panic(err)
+	}
+	if read_length != int(length) {
+		panic(fmt.Errorf("bad read length when reading []byte, expected %d, read %d", length, read_length))
+	}
+	return buffer
+}
+
+type FfiDestroyerBytes struct{}
+
+func (FfiDestroyerBytes) Destroy(_ []byte) {}
 
 // Below is an implementation of synchronization requirements outlined in the link.
 // https://github.com/mozilla/uniffi-rs/blob/0dc031132d9493ca812c3af6e7dd60ad2ea95bf0/uniffi_bindgen/src/bindings/kotlin/templates/ObjectRuntime.kt#L31
@@ -471,7 +692,557 @@ func (ffiObject *FfiObject) freeRustArcPtr() {
 	})
 }
 
+type DataHandler interface {
+	HandleData(peer *PublicKey, data []byte)
+}
+type DataHandlerImpl struct {
+	ffiObject FfiObject
+}
+
+func (_self *DataHandlerImpl) HandleData(peer *PublicKey, data []byte) {
+	_pointer := _self.ffiObject.incrementPointer("DataHandler")
+	defer _self.ffiObject.decrementPointer()
+	uniffiRustCallAsync[struct{}](
+		nil,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) struct{} {
+			C.ffi_iroh_streamplace_rust_future_complete_void(handle, status)
+			return struct{}{}
+		},
+		// liftFn
+		func(_ struct{}) struct{} { return struct{}{} },
+		C.uniffi_iroh_streamplace_fn_method_datahandler_handle_data(
+			_pointer, FfiConverterPublicKeyINSTANCE.Lower(peer), FfiConverterBytesINSTANCE.Lower(data)),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_poll_void(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_free_void(handle)
+		},
+	)
+
+}
+func (object *DataHandlerImpl) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterDataHandler struct {
+	handleMap *concurrentHandleMap[DataHandler]
+}
+
+var FfiConverterDataHandlerINSTANCE = FfiConverterDataHandler{
+	handleMap: newConcurrentHandleMap[DataHandler](),
+}
+
+func (c FfiConverterDataHandler) Lift(pointer unsafe.Pointer) DataHandler {
+	result := &DataHandlerImpl{
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iroh_streamplace_fn_clone_datahandler(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iroh_streamplace_fn_free_datahandler(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*DataHandlerImpl).Destroy)
+	return result
+}
+
+func (c FfiConverterDataHandler) Read(reader io.Reader) DataHandler {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterDataHandler) Lower(value DataHandler) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := unsafe.Pointer(uintptr(c.handleMap.insert(value)))
+	return pointer
+
+}
+
+func (c FfiConverterDataHandler) Write(writer io.Writer, value DataHandler) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerDataHandler struct{}
+
+func (_ FfiDestroyerDataHandler) Destroy(value DataHandler) {
+	if val, ok := value.(*DataHandlerImpl); ok {
+		val.Destroy()
+	} else {
+		panic("Expected *DataHandlerImpl")
+	}
+}
+
+type uniffiCallbackResult C.int8_t
+
+const (
+	uniffiIdxCallbackFree               uniffiCallbackResult = 0
+	uniffiCallbackResultSuccess         uniffiCallbackResult = 0
+	uniffiCallbackResultError           uniffiCallbackResult = 1
+	uniffiCallbackUnexpectedResultError uniffiCallbackResult = 2
+	uniffiCallbackCancelled             uniffiCallbackResult = 3
+)
+
+type concurrentHandleMap[T any] struct {
+	handles       map[uint64]T
+	currentHandle uint64
+	lock          sync.RWMutex
+}
+
+func newConcurrentHandleMap[T any]() *concurrentHandleMap[T] {
+	return &concurrentHandleMap[T]{
+		handles: map[uint64]T{},
+	}
+}
+
+func (cm *concurrentHandleMap[T]) insert(obj T) uint64 {
+	cm.lock.Lock()
+	defer cm.lock.Unlock()
+
+	cm.currentHandle = cm.currentHandle + 1
+	cm.handles[cm.currentHandle] = obj
+	return cm.currentHandle
+}
+
+func (cm *concurrentHandleMap[T]) remove(handle uint64) {
+	cm.lock.Lock()
+	defer cm.lock.Unlock()
+
+	delete(cm.handles, handle)
+}
+
+func (cm *concurrentHandleMap[T]) tryGet(handle uint64) (T, bool) {
+	cm.lock.RLock()
+	defer cm.lock.RUnlock()
+
+	val, ok := cm.handles[handle]
+	return val, ok
+}
+
+//export iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerMethod0
+func iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerMethod0(uniffiHandle C.uint64_t, peer unsafe.Pointer, data C.RustBuffer, uniffiFutureCallback C.UniffiForeignFutureCompleteVoid, uniffiCallbackData C.uint64_t, uniffiOutReturn *C.UniffiForeignFuture) {
+	handle := uint64(uniffiHandle)
+	uniffiObj, ok := FfiConverterDataHandlerINSTANCE.handleMap.tryGet(handle)
+	if !ok {
+		panic(fmt.Errorf("no callback in handle map: %d", handle))
+	}
+
+	result := make(chan C.UniffiForeignFutureStructVoid, 1)
+	cancel := make(chan struct{}, 1)
+	guardHandle := cgo.NewHandle(cancel)
+	*uniffiOutReturn = C.UniffiForeignFuture{
+		handle: C.uint64_t(guardHandle),
+		free:   C.UniffiForeignFutureFree(C.iroh_streamplace_uniffiFreeGorutine),
+	}
+
+	// Wait for compleation or cancel
+	go func() {
+		select {
+		case <-cancel:
+		case res := <-result:
+			C.call_UniffiForeignFutureCompleteVoid(uniffiFutureCallback, uniffiCallbackData, res)
+		}
+	}()
+
+	// Eval callback asynchroniously
+	go func() {
+		asyncResult := &C.UniffiForeignFutureStructVoid{}
+		defer func() {
+			result <- *asyncResult
+		}()
+
+		uniffiObj.HandleData(
+			FfiConverterPublicKeyINSTANCE.Lift(peer),
+			FfiConverterBytesINSTANCE.Lift(GoRustBuffer{
+				inner: data,
+			}),
+		)
+
+	}()
+}
+
+var UniffiVTableCallbackInterfaceDataHandlerINSTANCE = C.UniffiVTableCallbackInterfaceDataHandler{
+	handleData: (C.UniffiCallbackInterfaceDataHandlerMethod0)(C.iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerMethod0),
+
+	uniffiFree: (C.UniffiCallbackInterfaceFree)(C.iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerFree),
+}
+
+//export iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerFree
+func iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerFree(handle C.uint64_t) {
+	FfiConverterDataHandlerINSTANCE.handleMap.remove(uint64(handle))
+}
+
+func (c FfiConverterDataHandler) register() {
+	C.uniffi_iroh_streamplace_fn_init_callback_vtable_datahandler(&UniffiVTableCallbackInterfaceDataHandlerINSTANCE)
+}
+
+// A peer and it's addressing information.
+type NodeAddrInterface interface {
+	// Get the direct addresses of this peer.
+	DirectAddresses() []string
+	// Returns true if both NodeAddr's have the same values
+	Equal(other *NodeAddr) bool
+	NodeId() *PublicKey
+	// Get the home relay URL for this peer
+	RelayUrl() *string
+}
+
+// A peer and it's addressing information.
+type NodeAddr struct {
+	ffiObject FfiObject
+}
+
+// Create a new [`NodeAddr`] with empty [`AddrInfo`].
+func NewNodeAddr(nodeId *PublicKey, derpUrl *string, addresses []string) *NodeAddr {
+	return FfiConverterNodeAddrINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iroh_streamplace_fn_constructor_nodeaddr_new(FfiConverterPublicKeyINSTANCE.Lower(nodeId), FfiConverterOptionalStringINSTANCE.Lower(derpUrl), FfiConverterSequenceStringINSTANCE.Lower(addresses), _uniffiStatus)
+	}))
+}
+
+// Get the direct addresses of this peer.
+func (_self *NodeAddr) DirectAddresses() []string {
+	_pointer := _self.ffiObject.incrementPointer("*NodeAddr")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterSequenceStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer{
+			inner: C.uniffi_iroh_streamplace_fn_method_nodeaddr_direct_addresses(
+				_pointer, _uniffiStatus),
+		}
+	}))
+}
+
+// Returns true if both NodeAddr's have the same values
+func (_self *NodeAddr) Equal(other *NodeAddr) bool {
+	_pointer := _self.ffiObject.incrementPointer("*NodeAddr")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iroh_streamplace_fn_method_nodeaddr_equal(
+			_pointer, FfiConverterNodeAddrINSTANCE.Lower(other), _uniffiStatus)
+	}))
+}
+
+func (_self *NodeAddr) NodeId() *PublicKey {
+	_pointer := _self.ffiObject.incrementPointer("*NodeAddr")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iroh_streamplace_fn_method_nodeaddr_node_id(
+			_pointer, _uniffiStatus)
+	}))
+}
+
+// Get the home relay URL for this peer
+func (_self *NodeAddr) RelayUrl() *string {
+	_pointer := _self.ffiObject.incrementPointer("*NodeAddr")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterOptionalStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer{
+			inner: C.uniffi_iroh_streamplace_fn_method_nodeaddr_relay_url(
+				_pointer, _uniffiStatus),
+		}
+	}))
+}
+func (object *NodeAddr) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterNodeAddr struct{}
+
+var FfiConverterNodeAddrINSTANCE = FfiConverterNodeAddr{}
+
+func (c FfiConverterNodeAddr) Lift(pointer unsafe.Pointer) *NodeAddr {
+	result := &NodeAddr{
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iroh_streamplace_fn_clone_nodeaddr(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iroh_streamplace_fn_free_nodeaddr(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*NodeAddr).Destroy)
+	return result
+}
+
+func (c FfiConverterNodeAddr) Read(reader io.Reader) *NodeAddr {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterNodeAddr) Lower(value *NodeAddr) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*NodeAddr")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterNodeAddr) Write(writer io.Writer, value *NodeAddr) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerNodeAddr struct{}
+
+func (_ FfiDestroyerNodeAddr) Destroy(value *NodeAddr) {
+	value.Destroy()
+}
+
+// A public key.
+//
+// The key itself is just a 32 byte array, but a key has associated crypto
+// information that is cached for performance reasons.
+type PublicKeyInterface interface {
+	// Returns true if the PublicKeys are equal
+	Equal(other *PublicKey) bool
+	// Convert to a base32 string limited to the first 10 bytes for a friendly string
+	// representation of the key.
+	FmtShort() string
+	// Express the PublicKey as a byte array
+	ToBytes() []byte
+}
+
+// A public key.
+//
+// The key itself is just a 32 byte array, but a key has associated crypto
+// information that is cached for performance reasons.
+type PublicKey struct {
+	ffiObject FfiObject
+}
+
+// Make a PublicKey from byte array
+func PublicKeyFromBytes(bytes []byte) *PublicKey {
+	return FfiConverterPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iroh_streamplace_fn_constructor_publickey_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes), _uniffiStatus)
+	}))
+}
+
+// Make a PublicKey from base32 string
+func PublicKeyFromString(s string) *PublicKey {
+	return FfiConverterPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+		return C.uniffi_iroh_streamplace_fn_constructor_publickey_from_string(FfiConverterStringINSTANCE.Lower(s), _uniffiStatus)
+	}))
+}
+
+// Returns true if the PublicKeys are equal
+func (_self *PublicKey) Equal(other *PublicKey) bool {
+	_pointer := _self.ffiObject.incrementPointer("*PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBoolINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) C.int8_t {
+		return C.uniffi_iroh_streamplace_fn_method_publickey_equal(
+			_pointer, FfiConverterPublicKeyINSTANCE.Lower(other), _uniffiStatus)
+	}))
+}
+
+// Convert to a base32 string limited to the first 10 bytes for a friendly string
+// representation of the key.
+func (_self *PublicKey) FmtShort() string {
+	_pointer := _self.ffiObject.incrementPointer("*PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer{
+			inner: C.uniffi_iroh_streamplace_fn_method_publickey_fmt_short(
+				_pointer, _uniffiStatus),
+		}
+	}))
+}
+
+// Express the PublicKey as a byte array
+func (_self *PublicKey) ToBytes() []byte {
+	_pointer := _self.ffiObject.incrementPointer("*PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterBytesINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer{
+			inner: C.uniffi_iroh_streamplace_fn_method_publickey_to_bytes(
+				_pointer, _uniffiStatus),
+		}
+	}))
+}
+
+func (_self *PublicKey) String() string {
+	_pointer := _self.ffiObject.incrementPointer("*PublicKey")
+	defer _self.ffiObject.decrementPointer()
+	return FfiConverterStringINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return GoRustBuffer{
+			inner: C.uniffi_iroh_streamplace_fn_method_publickey_uniffi_trait_display(
+				_pointer, _uniffiStatus),
+		}
+	}))
+}
+
+func (object *PublicKey) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterPublicKey struct{}
+
+var FfiConverterPublicKeyINSTANCE = FfiConverterPublicKey{}
+
+func (c FfiConverterPublicKey) Lift(pointer unsafe.Pointer) *PublicKey {
+	result := &PublicKey{
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iroh_streamplace_fn_clone_publickey(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iroh_streamplace_fn_free_publickey(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*PublicKey).Destroy)
+	return result
+}
+
+func (c FfiConverterPublicKey) Read(reader io.Reader) *PublicKey {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterPublicKey) Lower(value *PublicKey) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*PublicKey")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterPublicKey) Write(writer io.Writer, value *PublicKey) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerPublicKey struct{}
+
+func (_ FfiDestroyerPublicKey) Destroy(value *PublicKey) {
+	value.Destroy()
+}
+
+type ReceiverEndpointInterface interface {
+	NodeAddr() *NodeAddr
+}
+type ReceiverEndpoint struct {
+	ffiObject FfiObject
+}
+
+// Create a new receiver endpoint.
+func NewReceiverEndpoint(handler DataHandler) *ReceiverEndpoint {
+	res, _ := uniffiRustCallAsync[struct{}](
+		nil,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iroh_streamplace_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *ReceiverEndpoint {
+			return FfiConverterReceiverEndpointINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iroh_streamplace_fn_constructor_receiverendpoint_new(FfiConverterDataHandlerINSTANCE.Lower(handler)),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res
+}
+
+func (_self *ReceiverEndpoint) NodeAddr() *NodeAddr {
+	_pointer := _self.ffiObject.incrementPointer("*ReceiverEndpoint")
+	defer _self.ffiObject.decrementPointer()
+	res, _ := uniffiRustCallAsync[struct{}](
+		nil,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iroh_streamplace_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *NodeAddr {
+			return FfiConverterNodeAddrINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iroh_streamplace_fn_method_receiverendpoint_node_addr(
+			_pointer),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res
+}
+func (object *ReceiverEndpoint) Destroy() {
+	runtime.SetFinalizer(object, nil)
+	object.ffiObject.destroy()
+}
+
+type FfiConverterReceiverEndpoint struct{}
+
+var FfiConverterReceiverEndpointINSTANCE = FfiConverterReceiverEndpoint{}
+
+func (c FfiConverterReceiverEndpoint) Lift(pointer unsafe.Pointer) *ReceiverEndpoint {
+	result := &ReceiverEndpoint{
+		newFfiObject(
+			pointer,
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) unsafe.Pointer {
+				return C.uniffi_iroh_streamplace_fn_clone_receiverendpoint(pointer, status)
+			},
+			func(pointer unsafe.Pointer, status *C.RustCallStatus) {
+				C.uniffi_iroh_streamplace_fn_free_receiverendpoint(pointer, status)
+			},
+		),
+	}
+	runtime.SetFinalizer(result, (*ReceiverEndpoint).Destroy)
+	return result
+}
+
+func (c FfiConverterReceiverEndpoint) Read(reader io.Reader) *ReceiverEndpoint {
+	return c.Lift(unsafe.Pointer(uintptr(readUint64(reader))))
+}
+
+func (c FfiConverterReceiverEndpoint) Lower(value *ReceiverEndpoint) unsafe.Pointer {
+	// TODO: this is bad - all synchronization from ObjectRuntime.go is discarded here,
+	// because the pointer will be decremented immediately after this function returns,
+	// and someone will be left holding onto a non-locked pointer.
+	pointer := value.ffiObject.incrementPointer("*ReceiverEndpoint")
+	defer value.ffiObject.decrementPointer()
+	return pointer
+
+}
+
+func (c FfiConverterReceiverEndpoint) Write(writer io.Writer, value *ReceiverEndpoint) {
+	writeUint64(writer, uint64(uintptr(c.Lower(value))))
+}
+
+type FfiDestroyerReceiverEndpoint struct{}
+
+func (_ FfiDestroyerReceiverEndpoint) Destroy(value *ReceiverEndpoint) {
+	value.Destroy()
+}
+
 type SenderEndpointInterface interface {
+	AddPeer(addr *NodeAddr)
+	NodeAddr() *NodeAddr
+	Send(nodeId *PublicKey, data []byte)
 }
 type SenderEndpoint struct {
 	ffiObject FfiObject
@@ -504,6 +1275,86 @@ func NewSenderEndpoint() *SenderEndpoint {
 	return res
 }
 
+func (_self *SenderEndpoint) AddPeer(addr *NodeAddr) {
+	_pointer := _self.ffiObject.incrementPointer("*SenderEndpoint")
+	defer _self.ffiObject.decrementPointer()
+	uniffiRustCallAsync[struct{}](
+		nil,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) struct{} {
+			C.ffi_iroh_streamplace_rust_future_complete_void(handle, status)
+			return struct{}{}
+		},
+		// liftFn
+		func(_ struct{}) struct{} { return struct{}{} },
+		C.uniffi_iroh_streamplace_fn_method_senderendpoint_add_peer(
+			_pointer, FfiConverterNodeAddrINSTANCE.Lower(addr)),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_poll_void(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_free_void(handle)
+		},
+	)
+
+}
+
+func (_self *SenderEndpoint) NodeAddr() *NodeAddr {
+	_pointer := _self.ffiObject.incrementPointer("*SenderEndpoint")
+	defer _self.ffiObject.decrementPointer()
+	res, _ := uniffiRustCallAsync[struct{}](
+		nil,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
+			res := C.ffi_iroh_streamplace_rust_future_complete_pointer(handle, status)
+			return res
+		},
+		// liftFn
+		func(ffi unsafe.Pointer) *NodeAddr {
+			return FfiConverterNodeAddrINSTANCE.Lift(ffi)
+		},
+		C.uniffi_iroh_streamplace_fn_method_senderendpoint_node_addr(
+			_pointer),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_poll_pointer(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_free_pointer(handle)
+		},
+	)
+
+	return res
+}
+
+func (_self *SenderEndpoint) Send(nodeId *PublicKey, data []byte) {
+	_pointer := _self.ffiObject.incrementPointer("*SenderEndpoint")
+	defer _self.ffiObject.decrementPointer()
+	uniffiRustCallAsync[struct{}](
+		nil,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) struct{} {
+			C.ffi_iroh_streamplace_rust_future_complete_void(handle, status)
+			return struct{}{}
+		},
+		// liftFn
+		func(_ struct{}) struct{} { return struct{}{} },
+		C.uniffi_iroh_streamplace_fn_method_senderendpoint_send(
+			_pointer, FfiConverterPublicKeyINSTANCE.Lower(nodeId), FfiConverterBytesINSTANCE.Lower(data)),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_poll_void(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_free_void(handle)
+		},
+	)
+
+}
 func (object *SenderEndpoint) Destroy() {
 	runtime.SetFinalizer(object, nil)
 	object.ffiObject.destroy()
@@ -551,6 +1402,86 @@ type FfiDestroyerSenderEndpoint struct{}
 
 func (_ FfiDestroyerSenderEndpoint) Destroy(value *SenderEndpoint) {
 	value.Destroy()
+}
+
+type FfiConverterOptionalString struct{}
+
+var FfiConverterOptionalStringINSTANCE = FfiConverterOptionalString{}
+
+func (c FfiConverterOptionalString) Lift(rb RustBufferI) *string {
+	return LiftFromRustBuffer[*string](c, rb)
+}
+
+func (_ FfiConverterOptionalString) Read(reader io.Reader) *string {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterStringINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalString) Lower(value *string) C.RustBuffer {
+	return LowerIntoRustBuffer[*string](c, value)
+}
+
+func (_ FfiConverterOptionalString) Write(writer io.Writer, value *string) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterStringINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalString struct{}
+
+func (_ FfiDestroyerOptionalString) Destroy(value *string) {
+	if value != nil {
+		FfiDestroyerString{}.Destroy(*value)
+	}
+}
+
+type FfiConverterSequenceString struct{}
+
+var FfiConverterSequenceStringINSTANCE = FfiConverterSequenceString{}
+
+func (c FfiConverterSequenceString) Lift(rb RustBufferI) []string {
+	return LiftFromRustBuffer[[]string](c, rb)
+}
+
+func (c FfiConverterSequenceString) Read(reader io.Reader) []string {
+	length := readInt32(reader)
+	if length == 0 {
+		return nil
+	}
+	result := make([]string, 0, length)
+	for i := int32(0); i < length; i++ {
+		result = append(result, FfiConverterStringINSTANCE.Read(reader))
+	}
+	return result
+}
+
+func (c FfiConverterSequenceString) Lower(value []string) C.RustBuffer {
+	return LowerIntoRustBuffer[[]string](c, value)
+}
+
+func (c FfiConverterSequenceString) Write(writer io.Writer, value []string) {
+	if len(value) > math.MaxInt32 {
+		panic("[]string is too large to fit into Int32")
+	}
+
+	writeInt32(writer, int32(len(value)))
+	for _, item := range value {
+		FfiConverterStringINSTANCE.Write(writer, item)
+	}
+}
+
+type FfiDestroyerSequenceString struct{}
+
+func (FfiDestroyerSequenceString) Destroy(sequence []string) {
+	for _, value := range sequence {
+		FfiDestroyerString{}.Destroy(value)
+	}
 }
 
 const (

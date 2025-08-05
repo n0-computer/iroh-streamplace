@@ -36,12 +36,15 @@ impl ReceiverEndpoint {
                     let Ok(conn) = incoming.await else {
                         return;
                     };
-                    let peer: PublicKey = conn.remote_node_id().unwrap().into();
+                    let peer = Arc::new(PublicKey::from(conn.remote_node_id().unwrap()));
                     let conn = imsg::Connection::new(conn).await.unwrap();
 
                     while let Ok(stream) = conn.accept_stream().await {
                         if let Ok(msg) = stream.recv_msg().await {
-                            handler.clone().handle_data(&peer, msg.to_vec()).await;
+                            handler
+                                .clone()
+                                .handle_data(peer.clone(), msg.to_vec())
+                                .await;
                         }
                     }
                 });
@@ -64,10 +67,10 @@ impl ReceiverEndpoint {
     }
 }
 
-#[uniffi::export]
+#[uniffi::export(with_foreign)]
 #[async_trait::async_trait]
 pub trait DataHandler: Send + Sync {
-    async fn handle_data(self: Arc<Self>, peer: &PublicKey, data: Vec<u8>);
+    async fn handle_data(&self, peer: Arc<PublicKey>, data: Vec<u8>);
 }
 
 #[cfg(test)]
@@ -90,8 +93,11 @@ mod tests {
 
         #[async_trait::async_trait]
         impl DataHandler for TestHandler {
-            async fn handle_data(self: Arc<Self>, peer: &PublicKey, data: Vec<u8>) {
-                self.messages.send((peer.clone(), data)).await.unwrap();
+            async fn handle_data(&self, peer: Arc<PublicKey>, data: Vec<u8>) {
+                self.messages
+                    .send((peer.as_ref().clone(), data))
+                    .await
+                    .unwrap();
             }
         }
 

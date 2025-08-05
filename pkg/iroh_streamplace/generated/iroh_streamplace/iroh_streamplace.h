@@ -378,6 +378,143 @@ static void call_UniffiForeignFutureCompleteVoid(
 
 
 #endif
+#ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_DATA_HANDLER_METHOD0
+#define UNIFFI_FFIDEF_CALLBACK_INTERFACE_DATA_HANDLER_METHOD0
+typedef void (*UniffiCallbackInterfaceDataHandlerMethod0)(uint64_t uniffi_handle, void* peer, RustBuffer data, UniffiForeignFutureCompleteVoid uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return);
+
+// Making function static works arround:
+// https://github.com/golang/go/issues/11263
+static void call_UniffiCallbackInterfaceDataHandlerMethod0(
+				UniffiCallbackInterfaceDataHandlerMethod0 cb, uint64_t uniffi_handle, void* peer, RustBuffer data, UniffiForeignFutureCompleteVoid uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return)
+{
+	return cb(uniffi_handle, peer, data, uniffi_future_callback, uniffi_callback_data, uniffi_out_return);
+}
+
+
+#endif
+#ifndef UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_DATA_HANDLER
+#define UNIFFI_FFIDEF_V_TABLE_CALLBACK_INTERFACE_DATA_HANDLER
+typedef struct UniffiVTableCallbackInterfaceDataHandler {
+    UniffiCallbackInterfaceDataHandlerMethod0 handleData;
+    UniffiCallbackInterfaceFree uniffiFree;
+} UniffiVTableCallbackInterfaceDataHandler;
+
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_DATAHANDLER
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_DATAHANDLER
+void* uniffi_iroh_streamplace_fn_clone_datahandler(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_FREE_DATAHANDLER
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_FREE_DATAHANDLER
+void uniffi_iroh_streamplace_fn_free_datahandler(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_INIT_CALLBACK_VTABLE_DATAHANDLER
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_INIT_CALLBACK_VTABLE_DATAHANDLER
+void uniffi_iroh_streamplace_fn_init_callback_vtable_datahandler(UniffiVTableCallbackInterfaceDataHandler* vtable
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_DATAHANDLER_HANDLE_DATA
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_DATAHANDLER_HANDLE_DATA
+uint64_t uniffi_iroh_streamplace_fn_method_datahandler_handle_data(void* ptr, void* peer, RustBuffer data
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_NODEADDR
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_NODEADDR
+void* uniffi_iroh_streamplace_fn_clone_nodeaddr(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_FREE_NODEADDR
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_FREE_NODEADDR
+void uniffi_iroh_streamplace_fn_free_nodeaddr(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CONSTRUCTOR_NODEADDR_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CONSTRUCTOR_NODEADDR_NEW
+void* uniffi_iroh_streamplace_fn_constructor_nodeaddr_new(void* node_id, RustBuffer derp_url, RustBuffer addresses, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_NODEADDR_DIRECT_ADDRESSES
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_NODEADDR_DIRECT_ADDRESSES
+RustBuffer uniffi_iroh_streamplace_fn_method_nodeaddr_direct_addresses(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_NODEADDR_EQUAL
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_NODEADDR_EQUAL
+int8_t uniffi_iroh_streamplace_fn_method_nodeaddr_equal(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_NODEADDR_NODE_ID
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_NODEADDR_NODE_ID
+void* uniffi_iroh_streamplace_fn_method_nodeaddr_node_id(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_NODEADDR_RELAY_URL
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_NODEADDR_RELAY_URL
+RustBuffer uniffi_iroh_streamplace_fn_method_nodeaddr_relay_url(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_PUBLICKEY
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_PUBLICKEY
+void* uniffi_iroh_streamplace_fn_clone_publickey(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_FREE_PUBLICKEY
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_FREE_PUBLICKEY
+void uniffi_iroh_streamplace_fn_free_publickey(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CONSTRUCTOR_PUBLICKEY_FROM_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CONSTRUCTOR_PUBLICKEY_FROM_BYTES
+void* uniffi_iroh_streamplace_fn_constructor_publickey_from_bytes(RustBuffer bytes, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CONSTRUCTOR_PUBLICKEY_FROM_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CONSTRUCTOR_PUBLICKEY_FROM_STRING
+void* uniffi_iroh_streamplace_fn_constructor_publickey_from_string(RustBuffer s, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_PUBLICKEY_EQUAL
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_PUBLICKEY_EQUAL
+int8_t uniffi_iroh_streamplace_fn_method_publickey_equal(void* ptr, void* other, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_PUBLICKEY_FMT_SHORT
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_PUBLICKEY_FMT_SHORT
+RustBuffer uniffi_iroh_streamplace_fn_method_publickey_fmt_short(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_PUBLICKEY_TO_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_PUBLICKEY_TO_BYTES
+RustBuffer uniffi_iroh_streamplace_fn_method_publickey_to_bytes(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_PUBLICKEY_UNIFFI_TRAIT_DISPLAY
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_PUBLICKEY_UNIFFI_TRAIT_DISPLAY
+RustBuffer uniffi_iroh_streamplace_fn_method_publickey_uniffi_trait_display(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_RECEIVERENDPOINT
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_RECEIVERENDPOINT
+void* uniffi_iroh_streamplace_fn_clone_receiverendpoint(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_FREE_RECEIVERENDPOINT
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_FREE_RECEIVERENDPOINT
+void uniffi_iroh_streamplace_fn_free_receiverendpoint(void* ptr, RustCallStatus *out_status
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CONSTRUCTOR_RECEIVERENDPOINT_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CONSTRUCTOR_RECEIVERENDPOINT_NEW
+uint64_t uniffi_iroh_streamplace_fn_constructor_receiverendpoint_new(void* handler
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_RECEIVERENDPOINT_NODE_ADDR
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_RECEIVERENDPOINT_NODE_ADDR
+uint64_t uniffi_iroh_streamplace_fn_method_receiverendpoint_node_addr(void* ptr
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_SENDERENDPOINT
 #define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_SENDERENDPOINT
 void* uniffi_iroh_streamplace_fn_clone_senderendpoint(void* ptr, RustCallStatus *out_status
@@ -392,6 +529,21 @@ void uniffi_iroh_streamplace_fn_free_senderendpoint(void* ptr, RustCallStatus *o
 #define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CONSTRUCTOR_SENDERENDPOINT_NEW
 uint64_t uniffi_iroh_streamplace_fn_constructor_senderendpoint_new(void
     
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDERENDPOINT_ADD_PEER
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDERENDPOINT_ADD_PEER
+uint64_t uniffi_iroh_streamplace_fn_method_senderendpoint_add_peer(void* ptr, void* addr
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDERENDPOINT_NODE_ADDR
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDERENDPOINT_NODE_ADDR
+uint64_t uniffi_iroh_streamplace_fn_method_senderendpoint_node_addr(void* ptr
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDERENDPOINT_SEND
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDERENDPOINT_SEND
+uint64_t uniffi_iroh_streamplace_fn_method_senderendpoint_send(void* ptr, void* node_id, RustBuffer data
 );
 #endif
 #ifndef UNIFFI_FFIDEF_FFI_IROH_STREAMPLACE_RUSTBUFFER_ALLOC
@@ -674,6 +826,102 @@ void ffi_iroh_streamplace_rust_future_free_void(uint64_t handle
 void ffi_iroh_streamplace_rust_future_complete_void(uint64_t handle, RustCallStatus *out_status
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_DATAHANDLER_HANDLE_DATA
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_DATAHANDLER_HANDLE_DATA
+uint16_t uniffi_iroh_streamplace_checksum_method_datahandler_handle_data(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_NODEADDR_DIRECT_ADDRESSES
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_NODEADDR_DIRECT_ADDRESSES
+uint16_t uniffi_iroh_streamplace_checksum_method_nodeaddr_direct_addresses(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_NODEADDR_EQUAL
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_NODEADDR_EQUAL
+uint16_t uniffi_iroh_streamplace_checksum_method_nodeaddr_equal(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_NODEADDR_NODE_ID
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_NODEADDR_NODE_ID
+uint16_t uniffi_iroh_streamplace_checksum_method_nodeaddr_node_id(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_NODEADDR_RELAY_URL
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_NODEADDR_RELAY_URL
+uint16_t uniffi_iroh_streamplace_checksum_method_nodeaddr_relay_url(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_PUBLICKEY_EQUAL
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_PUBLICKEY_EQUAL
+uint16_t uniffi_iroh_streamplace_checksum_method_publickey_equal(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_PUBLICKEY_FMT_SHORT
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_PUBLICKEY_FMT_SHORT
+uint16_t uniffi_iroh_streamplace_checksum_method_publickey_fmt_short(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_PUBLICKEY_TO_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_PUBLICKEY_TO_BYTES
+uint16_t uniffi_iroh_streamplace_checksum_method_publickey_to_bytes(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_RECEIVERENDPOINT_NODE_ADDR
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_RECEIVERENDPOINT_NODE_ADDR
+uint16_t uniffi_iroh_streamplace_checksum_method_receiverendpoint_node_addr(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_SENDERENDPOINT_ADD_PEER
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_SENDERENDPOINT_ADD_PEER
+uint16_t uniffi_iroh_streamplace_checksum_method_senderendpoint_add_peer(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_SENDERENDPOINT_NODE_ADDR
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_SENDERENDPOINT_NODE_ADDR
+uint16_t uniffi_iroh_streamplace_checksum_method_senderendpoint_node_addr(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_SENDERENDPOINT_SEND
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_SENDERENDPOINT_SEND
+uint16_t uniffi_iroh_streamplace_checksum_method_senderendpoint_send(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_CONSTRUCTOR_NODEADDR_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_CONSTRUCTOR_NODEADDR_NEW
+uint16_t uniffi_iroh_streamplace_checksum_constructor_nodeaddr_new(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_CONSTRUCTOR_PUBLICKEY_FROM_BYTES
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_CONSTRUCTOR_PUBLICKEY_FROM_BYTES
+uint16_t uniffi_iroh_streamplace_checksum_constructor_publickey_from_bytes(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_CONSTRUCTOR_PUBLICKEY_FROM_STRING
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_CONSTRUCTOR_PUBLICKEY_FROM_STRING
+uint16_t uniffi_iroh_streamplace_checksum_constructor_publickey_from_string(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_CONSTRUCTOR_RECEIVERENDPOINT_NEW
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_CONSTRUCTOR_RECEIVERENDPOINT_NEW
+uint16_t uniffi_iroh_streamplace_checksum_constructor_receiverendpoint_new(void
+    
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_CONSTRUCTOR_SENDERENDPOINT_NEW
 #define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_CONSTRUCTOR_SENDERENDPOINT_NEW
 uint16_t uniffi_iroh_streamplace_checksum_constructor_senderendpoint_new(void
@@ -687,6 +935,8 @@ uint32_t ffi_iroh_streamplace_uniffi_contract_version(void
 );
 #endif
 
+ void iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerMethod0(uint64_t uniffi_handle, void* peer, RustBuffer data, UniffiForeignFutureCompleteVoid uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return);
+ void iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerFree(uint64_t handle);
 
 void iroh_streamplace_uniffiFutureContinuationCallback(uint64_t, int8_t);
 void iroh_streamplace_uniffiFreeGorutine(uint64_t);
