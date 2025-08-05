@@ -1732,7 +1732,9 @@ name = "iroh-streamplace"
 version = "0.1.0"
 dependencies = [
  "iroh",
+ "tokio",
  "uniffi",
+ "url",
 ]
 
 [[package]]

@@ -13,4 +13,5 @@ go:
 
 .PHONY: test
 test:
+	cargo test
 	go test ./pkg/...

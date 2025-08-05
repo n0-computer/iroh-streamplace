@@ -9,5 +9,7 @@ crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
 iroh = "0.91.1"
+tokio = "1.47.1"
 
 uniffi = { version = "=0.28.3", features = ["tokio"] }
+url = "2.5.4"
