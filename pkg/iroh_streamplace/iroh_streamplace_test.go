@@ -16,7 +16,7 @@ func (handler TestHandler) HandleData(node *iroh.PublicKey, data []byte) {
 	handler.messages <- data
 }
 
-func TestSender(t *testing.T)  {
+func TestBasicRoundtrip(t *testing.T)  {
         sender := iroh.NewSenderEndpoint()
 
 	messages := make(chan []byte, 5)
