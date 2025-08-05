@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use iroh::endpoint::Connection;
+use bytes::Bytes;
 use iroh::{NodeId, Watcher};
 use tokio::sync::Mutex;
 
@@ -11,7 +11,7 @@ use crate::utils::NodeAddr;
 #[derive(uniffi::Object)]
 pub struct SenderEndpoint {
     endpoint: iroh::Endpoint,
-    connections: Mutex<HashMap<NodeId, Connection>>,
+    connections: Mutex<HashMap<NodeId, imsg::Connection>>,
 }
 
 #[uniffi::export]
@@ -37,6 +37,7 @@ impl SenderEndpoint {
             return;
         }
         let conn = self.endpoint.connect(addr, ALPN).await.unwrap();
+        let conn = imsg::Connection::new(conn).await.unwrap();
         conns.insert(node_id, conn);
     }
 
@@ -47,11 +48,15 @@ impl SenderEndpoint {
             panic!("no connection");
         };
 
-        todo!("send data");
+        // TODO: store streams
+        let stream = conn.open_stream().await.unwrap();
+        let data = Bytes::copy_from_slice(data);
+        stream.send_msg(data).await.unwrap();
     }
 
-    pub fn node_addr(&self) -> NodeAddr {
-        let addr = self.endpoint.node_addr().get().unwrap();
+    #[uniffi::method(async_runtime = "tokio")]
+    pub async fn node_addr(&self) -> NodeAddr {
+        let addr = self.endpoint.node_addr().initialized().await;
         addr.into()
     }
 }

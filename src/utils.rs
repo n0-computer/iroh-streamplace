@@ -23,6 +23,10 @@ impl NodeAddr {
         }
     }
 
+    pub fn node_id(&self) -> PublicKey {
+        self.node_id.as_ref().clone()
+    }
+
     /// Get the direct addresses of this peer.
     pub fn direct_addresses(&self) -> Vec<String> {
         self.addresses.clone()
