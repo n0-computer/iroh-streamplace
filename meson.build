@@ -14,7 +14,7 @@ if triple != ''
   archive_dir += '/' + triple
 endif
 
-c2pa_go_dep = custom_target(
+iroh_streamplace_dep = custom_target(
   'libiroh_streamplace',
   input: [],
   output: ['libiroh_streamplace.a'],
