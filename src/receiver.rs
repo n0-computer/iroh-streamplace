@@ -22,6 +22,7 @@ impl ReceiverEndpoint {
         // TODO: error handling
         let endpoint = iroh::Endpoint::builder()
             .discovery_n0()
+            .discovery_local_network()
             .alpns(vec![ALPN.to_vec()])
             .bind()
             .await
@@ -63,6 +64,7 @@ impl ReceiverEndpoint {
 
     #[uniffi::method(async_runtime = "tokio")]
     pub async fn node_addr(&self) -> NodeAddr {
+        let _ = self.endpoint.home_relay().initialized().await;
         let addr = self.endpoint.node_addr().initialized().await;
         addr.into()
     }
@@ -83,6 +85,10 @@ mod tests {
 
     #[tokio::test]
     async fn test_roundtrip() {
+        tracing_subscriber::fmt()
+            .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
+            .init();
+
         let sender = SenderEndpoint::new().await;
 
         let (s, mut r) = tokio::sync::mpsc::channel(5);
@@ -106,10 +112,13 @@ mod tests {
         let receiver = ReceiverEndpoint::new(Arc::new(handler.clone())).await;
 
         let receiver_addr = receiver.node_addr().await;
+        println!("recv addr: {:?}", receiver_addr);
         let receiver_id = receiver_addr.node_id();
 
         // add peer
-        sender.add_peer(&receiver_addr).await;
+        sender
+            .add_peer(&NodeAddr::new(&receiver_id, None, Vec::new()))
+            .await;
 
         // send a few messages
         for i in 0u8..5 {

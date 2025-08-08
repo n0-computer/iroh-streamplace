@@ -22,6 +22,7 @@ impl SenderEndpoint {
         // TODO: error handling
         let endpoint = iroh::Endpoint::builder()
             .discovery_n0()
+            .discovery_local_network()
             .bind()
             .await
             .unwrap();
@@ -60,6 +61,7 @@ impl SenderEndpoint {
 
     #[uniffi::method(async_runtime = "tokio")]
     pub async fn node_addr(&self) -> NodeAddr {
+        let _ = self.endpoint.home_relay().initialized().await;
         let addr = self.endpoint.node_addr().initialized().await;
         addr.into()
     }
