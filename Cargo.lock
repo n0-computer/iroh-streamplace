@@ -1767,6 +1767,7 @@ dependencies = [
  "iroh",
  "n0-future 0.2.0",
  "tokio",
+ "tracing",
  "tracing-subscriber",
  "uniffi",
  "url",

@@ -3,6 +3,7 @@ use std::sync::Arc;
 use iroh::Watcher;
 use n0_future::task::{self, AbortOnDropHandle};
 use tokio::task::JoinSet;
+use tracing::{debug, warn};
 
 use crate::ALPN;
 use crate::key::PublicKey;
@@ -38,11 +39,21 @@ impl ReceiverEndpoint {
                     let Ok(conn) = incoming.await else {
                         return;
                     };
-                    let peer = Arc::new(PublicKey::from(conn.remote_node_id().unwrap()));
-                    let conn = imsg::Connection::new(conn).await.unwrap();
+                    let peer = Arc::new(PublicKey::from(
+                        conn.remote_node_id().expect("invalid remote"),
+                    ));
+                    let conn = match imsg::Connection::new(conn).await {
+                        Ok(conn) => conn,
+                        Err(err) => {
+                            warn!("imsg connection failed: {:?}", err);
+                            return;
+                        }
+                    };
 
                     while let Ok(stream) = conn.accept_stream().await {
+                        debug!("accepted stream");
                         if let Ok(msg) = stream.recv_msg().await {
+                            debug!("received msg {} bytes", msg.len());
                             handler
                                 .clone()
                                 .handle_data(peer.clone(), msg.to_vec())
