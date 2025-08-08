@@ -20,7 +20,11 @@ impl SenderEndpoint {
     #[uniffi::constructor(async_runtime = "tokio")]
     pub async fn new() -> SenderEndpoint {
         // TODO: error handling
-        let endpoint = iroh::Endpoint::builder().bind().await.unwrap();
+        let endpoint = iroh::Endpoint::builder()
+            .discovery_n0()
+            .bind()
+            .await
+            .unwrap();
         SenderEndpoint {
             endpoint,
             connections: Default::default(),

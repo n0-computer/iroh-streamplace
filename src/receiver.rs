@@ -21,6 +21,7 @@ impl ReceiverEndpoint {
     pub async fn new(handler: Arc<dyn DataHandler>) -> ReceiverEndpoint {
         // TODO: error handling
         let endpoint = iroh::Endpoint::builder()
+            .discovery_n0()
             .alpns(vec![ALPN.to_vec()])
             .bind()
             .await
