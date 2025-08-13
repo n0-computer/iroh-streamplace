@@ -1,34 +1,29 @@
 use std::sync::Arc;
 
-use iroh::Watcher;
 use n0_future::task::{self, AbortOnDropHandle};
 use tokio::task::JoinSet;
 use tracing::{debug, warn};
 
-use crate::ALPN;
+use crate::endpoint::Endpoint;
 use crate::error::Error;
 use crate::key::PublicKey;
 use crate::utils::NodeAddr;
 
 #[derive(uniffi::Object)]
-pub struct ReceiverEndpoint {
-    endpoint: iroh::Endpoint,
+pub struct Receiver {
+    endpoint: Endpoint,
     _handle: AbortOnDropHandle<()>,
 }
 
 #[uniffi::export]
-impl ReceiverEndpoint {
-    /// Create a new receiver endpoint.
+impl Receiver {
+    /// Create a new receiver.
     #[uniffi::constructor(async_runtime = "tokio")]
-    pub async fn new(handler: Arc<dyn DataHandler>) -> Result<ReceiverEndpoint, Error> {
-        let endpoint = iroh::Endpoint::builder()
-            .discovery_n0()
-            .discovery_local_network()
-            .alpns(vec![ALPN.to_vec()])
-            .bind()
-            .await?;
-
-        let ep = endpoint.clone();
+    pub async fn new(
+        endpoint: &Endpoint,
+        handler: Arc<dyn DataHandler>,
+    ) -> Result<Receiver, Error> {
+        let ep = endpoint.endpoint.clone();
         let handle = task::spawn(async move {
             let mut tasks = JoinSet::default();
 
@@ -66,17 +61,15 @@ impl ReceiverEndpoint {
             tasks.abort_all();
         });
 
-        Ok(ReceiverEndpoint {
-            endpoint,
+        Ok(Receiver {
+            endpoint: endpoint.clone(),
             _handle: AbortOnDropHandle::new(handle),
         })
     }
 
     #[uniffi::method(async_runtime = "tokio")]
     pub async fn node_addr(&self) -> NodeAddr {
-        let _ = self.endpoint.home_relay().initialized().await;
-        let addr = self.endpoint.node_addr().initialized().await;
-        addr.into()
+        self.endpoint.node_addr().await
     }
 }
 
@@ -89,7 +82,7 @@ pub trait DataHandler: Send + Sync {
 #[cfg(test)]
 mod tests {
 
-    use crate::sender::SenderEndpoint;
+    use crate::sender::Sender;
 
     use super::*;
 
@@ -99,7 +92,8 @@ mod tests {
             .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
             .init();
 
-        let sender = SenderEndpoint::new().await.unwrap();
+        let ep1 = Endpoint::new().await.unwrap();
+        let sender = Sender::new(&ep1).await.unwrap();
 
         let (s, mut r) = tokio::sync::mpsc::channel(5);
 
@@ -119,7 +113,8 @@ mod tests {
         }
 
         let handler = TestHandler { messages: s };
-        let receiver = ReceiverEndpoint::new(Arc::new(handler.clone()))
+        let ep2 = Endpoint::new().await.unwrap();
+        let receiver = Receiver::new(&ep2, Arc::new(handler.clone()))
             .await
             .unwrap();
 

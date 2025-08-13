@@ -17,13 +17,17 @@ func (handler TestHandler) HandleData(node *iroh.PublicKey, data []byte) {
 }
 
 func TestBasicRoundtrip(t *testing.T) {
-	sender, err := iroh.NewSenderEndpoint()
+	ep1, err := iroh.NewEndpoint()
+	assert.Nil(t, err)
+	sender, err := iroh.NewSender(ep1)
 	assert.Nil(t, err)
 
 	messages := make(chan []byte, 5)
 	handler := TestHandler{messages: messages}
 
-	receiver, err := iroh.NewReceiverEndpoint(&handler)
+	ep2, err := iroh.NewEndpoint()
+	assert.Nil(t, err)
+	receiver, err := iroh.NewReceiver(ep2, &handler)
 	assert.Nil(t, err)
 
 	receiverAddr := receiver.NodeAddr()
