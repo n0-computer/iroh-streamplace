@@ -1,5 +1,7 @@
 use std::str::FromStr;
 
+use crate::error::{Error, InvalidPublicKeySnafu};
+
 /// A public key.
 ///
 /// The key itself is just a 32 byte array, but a key has associated crypto
@@ -37,21 +39,20 @@ impl PublicKey {
 
     /// Make a PublicKey from base32 string
     #[uniffi::constructor]
-    pub fn from_string(s: String) -> Self {
-        // TODO: error
-        let key = iroh::PublicKey::from_str(&s).unwrap();
-        key.into()
+    pub fn from_string(s: String) -> Result<Self, Error> {
+        let key = iroh::PublicKey::from_str(&s).map_err(|_| InvalidPublicKeySnafu.build())?;
+        Ok(key.into())
     }
 
     /// Make a PublicKey from byte array
     #[uniffi::constructor]
-    pub fn from_bytes(bytes: Vec<u8>) -> Self {
+    pub fn from_bytes(bytes: Vec<u8>) -> Result<Self, Error> {
         if bytes.len() != 32 {
-            panic!("the PublicKey must be 32 bytes in length");
+            InvalidPublicKeySnafu.fail()?;
         }
         let bytes: [u8; 32] = bytes.try_into().expect("checked above");
-        let key = iroh::PublicKey::from_bytes(&bytes).unwrap();
-        key.into()
+        let key = iroh::PublicKey::from_bytes(&bytes).map_err(|_| InvalidPublicKeySnafu.build())?;
+        Ok(key.into())
     }
 
     /// Convert to a base32 string limited to the first 10 bytes for a friendly string
@@ -85,7 +86,7 @@ mod tests {
         let bytes = b"\x52\x3c\x79\x96\xba\xd7\x74\x24\xe9\x67\x86\xcf\x7a\x72\x05\x11\x53\x37\xa5\xb4\x56\x5c\xd2\x55\x06\xa0\xf2\x97\xb1\x91\xa5\xea";
         //
         // create key from string
-        let key = PublicKey::from_string(key_str.clone());
+        let key = PublicKey::from_string(key_str.clone()).unwrap();
         //
         // test methods are as expected
         assert_eq!(key_str, key.to_string());
@@ -93,7 +94,7 @@ mod tests {
         assert_eq!(fmt_str, key.fmt_short());
         //
         // create key from bytes
-        let key_0 = PublicKey::from_bytes(bytes.to_vec());
+        let key_0 = PublicKey::from_bytes(bytes.to_vec()).unwrap();
         //
         // test methods are as expected
         assert_eq!(key_str, key_0.to_string());

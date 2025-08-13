@@ -1,6 +1,7 @@
 use std::str::FromStr;
 use std::sync::Arc;
 
+use crate::error::Error;
 use crate::key::PublicKey;
 
 /// A peer and it's addressing information.
@@ -44,19 +45,18 @@ impl NodeAddr {
 }
 
 impl TryFrom<NodeAddr> for iroh::NodeAddr {
-    type Error = ();
+    type Error = Error;
 
     fn try_from(value: NodeAddr) -> Result<Self, Self::Error> {
         let mut node_addr = iroh::NodeAddr::new((&*value.node_id).into());
         let addresses = value
             .direct_addresses()
             .into_iter()
-            .map(|addr| std::net::SocketAddr::from_str(&addr))
-            .collect::<Result<Vec<_>, _>>()
-            .map_err(|_| ())?;
+            .map(|addr| std::net::SocketAddr::from_str(&addr).map_err(Error::from))
+            .collect::<Result<Vec<_>, _>>()?;
 
         if let Some(derp_url) = value.relay_url() {
-            let url = url::Url::parse(&derp_url).map_err(|_| ())?;
+            let url = url::Url::parse(&derp_url)?;
 
             node_addr = node_addr.with_relay_url(url.into());
         }

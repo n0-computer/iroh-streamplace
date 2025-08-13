@@ -6,6 +6,7 @@ use tokio::task::JoinSet;
 use tracing::{debug, warn};
 
 use crate::ALPN;
+use crate::error::Error;
 use crate::key::PublicKey;
 use crate::utils::NodeAddr;
 
@@ -19,15 +20,13 @@ pub struct ReceiverEndpoint {
 impl ReceiverEndpoint {
     /// Create a new receiver endpoint.
     #[uniffi::constructor(async_runtime = "tokio")]
-    pub async fn new(handler: Arc<dyn DataHandler>) -> ReceiverEndpoint {
-        // TODO: error handling
+    pub async fn new(handler: Arc<dyn DataHandler>) -> Result<ReceiverEndpoint, Error> {
         let endpoint = iroh::Endpoint::builder()
             .discovery_n0()
             .discovery_local_network()
             .alpns(vec![ALPN.to_vec()])
             .bind()
-            .await
-            .unwrap();
+            .await?;
 
         let ep = endpoint.clone();
         let handle = task::spawn(async move {
@@ -67,10 +66,10 @@ impl ReceiverEndpoint {
             tasks.abort_all();
         });
 
-        ReceiverEndpoint {
+        Ok(ReceiverEndpoint {
             endpoint,
             _handle: AbortOnDropHandle::new(handle),
-        }
+        })
     }
 
     #[uniffi::method(async_runtime = "tokio")]
@@ -100,7 +99,7 @@ mod tests {
             .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
             .init();
 
-        let sender = SenderEndpoint::new().await;
+        let sender = SenderEndpoint::new().await.unwrap();
 
         let (s, mut r) = tokio::sync::mpsc::channel(5);
 
@@ -120,7 +119,9 @@ mod tests {
         }
 
         let handler = TestHandler { messages: s };
-        let receiver = ReceiverEndpoint::new(Arc::new(handler.clone())).await;
+        let receiver = ReceiverEndpoint::new(Arc::new(handler.clone()))
+            .await
+            .unwrap();
 
         let receiver_addr = receiver.node_addr().await;
         println!("recv addr: {:?}", receiver_addr);
@@ -129,11 +130,12 @@ mod tests {
         // add peer
         sender
             .add_peer(&NodeAddr::new(&receiver_id, None, Vec::new()))
-            .await;
+            .await
+            .unwrap();
 
         // send a few messages
         for i in 0u8..5 {
-            sender.send(&receiver_id, &[i, 0, 0, 0]).await;
+            sender.send(&receiver_id, &[i, 0, 0, 0]).await.unwrap();
         }
 
         // make sure the receiver got them

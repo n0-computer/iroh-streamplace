@@ -434,7 +434,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_iroh_streamplace_checksum_method_senderendpoint_add_peer()
 		})
-		if checksum != 63624 {
+		if checksum != 5255 {
 			// If this happens try cleaning and rebuilding your project
 			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_senderendpoint_add_peer: UniFFI API checksum mismatch")
 		}
@@ -452,7 +452,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_iroh_streamplace_checksum_method_senderendpoint_send()
 		})
-		if checksum != 21989 {
+		if checksum != 20180 {
 			// If this happens try cleaning and rebuilding your project
 			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_senderendpoint_send: UniFFI API checksum mismatch")
 		}
@@ -470,7 +470,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_iroh_streamplace_checksum_constructor_publickey_from_bytes()
 		})
-		if checksum != 51762 {
+		if checksum != 54187 {
 			// If this happens try cleaning and rebuilding your project
 			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_constructor_publickey_from_bytes: UniFFI API checksum mismatch")
 		}
@@ -479,7 +479,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_iroh_streamplace_checksum_constructor_publickey_from_string()
 		})
-		if checksum != 2826 {
+		if checksum != 62773 {
 			// If this happens try cleaning and rebuilding your project
 			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_constructor_publickey_from_string: UniFFI API checksum mismatch")
 		}
@@ -488,7 +488,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_iroh_streamplace_checksum_constructor_receiverendpoint_new()
 		})
-		if checksum != 30890 {
+		if checksum != 45400 {
 			// If this happens try cleaning and rebuilding your project
 			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_constructor_receiverendpoint_new: UniFFI API checksum mismatch")
 		}
@@ -497,7 +497,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_iroh_streamplace_checksum_constructor_senderendpoint_new()
 		})
-		if checksum != 37772 {
+		if checksum != 47627 {
 			// If this happens try cleaning and rebuilding your project
 			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_constructor_senderendpoint_new: UniFFI API checksum mismatch")
 		}
@@ -1020,17 +1020,29 @@ type PublicKey struct {
 }
 
 // Make a PublicKey from byte array
-func PublicKeyFromBytes(bytes []byte) *PublicKey {
-	return FfiConverterPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+func PublicKeyFromBytes(bytes []byte) (*PublicKey, *Error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[Error](FfiConverterError{}, func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iroh_streamplace_fn_constructor_publickey_from_bytes(FfiConverterBytesINSTANCE.Lower(bytes), _uniffiStatus)
-	}))
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *PublicKey
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterPublicKeyINSTANCE.Lift(_uniffiRV), _uniffiErr
+	}
 }
 
 // Make a PublicKey from base32 string
-func PublicKeyFromString(s string) *PublicKey {
-	return FfiConverterPublicKeyINSTANCE.Lift(rustCall(func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
+func PublicKeyFromString(s string) (*PublicKey, *Error) {
+	_uniffiRV, _uniffiErr := rustCallWithError[Error](FfiConverterError{}, func(_uniffiStatus *C.RustCallStatus) unsafe.Pointer {
 		return C.uniffi_iroh_streamplace_fn_constructor_publickey_from_string(FfiConverterStringINSTANCE.Lower(s), _uniffiStatus)
-	}))
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue *PublicKey
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterPublicKeyINSTANCE.Lift(_uniffiRV), _uniffiErr
+	}
 }
 
 // Returns true if the PublicKeys are equal
@@ -1136,9 +1148,9 @@ type ReceiverEndpoint struct {
 }
 
 // Create a new receiver endpoint.
-func NewReceiverEndpoint(handler DataHandler) *ReceiverEndpoint {
-	res, _ := uniffiRustCallAsync[struct{}](
-		nil,
+func NewReceiverEndpoint(handler DataHandler) (*ReceiverEndpoint, *Error) {
+	res, err := uniffiRustCallAsync[Error](
+		FfiConverterErrorINSTANCE,
 		// completeFn
 		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
 			res := C.ffi_iroh_streamplace_rust_future_complete_pointer(handle, status)
@@ -1159,7 +1171,7 @@ func NewReceiverEndpoint(handler DataHandler) *ReceiverEndpoint {
 		},
 	)
 
-	return res
+	return res, err
 }
 
 func (_self *ReceiverEndpoint) NodeAddr() *NodeAddr {
@@ -1240,18 +1252,18 @@ func (_ FfiDestroyerReceiverEndpoint) Destroy(value *ReceiverEndpoint) {
 }
 
 type SenderEndpointInterface interface {
-	AddPeer(addr *NodeAddr)
+	AddPeer(addr *NodeAddr) *Error
 	NodeAddr() *NodeAddr
-	Send(nodeId *PublicKey, data []byte)
+	Send(nodeId *PublicKey, data []byte) *Error
 }
 type SenderEndpoint struct {
 	ffiObject FfiObject
 }
 
 // Create a new sender endpoint.
-func NewSenderEndpoint() *SenderEndpoint {
-	res, _ := uniffiRustCallAsync[struct{}](
-		nil,
+func NewSenderEndpoint() (*SenderEndpoint, *Error) {
+	res, err := uniffiRustCallAsync[Error](
+		FfiConverterErrorINSTANCE,
 		// completeFn
 		func(handle C.uint64_t, status *C.RustCallStatus) unsafe.Pointer {
 			res := C.ffi_iroh_streamplace_rust_future_complete_pointer(handle, status)
@@ -1272,14 +1284,14 @@ func NewSenderEndpoint() *SenderEndpoint {
 		},
 	)
 
-	return res
+	return res, err
 }
 
-func (_self *SenderEndpoint) AddPeer(addr *NodeAddr) {
+func (_self *SenderEndpoint) AddPeer(addr *NodeAddr) *Error {
 	_pointer := _self.ffiObject.incrementPointer("*SenderEndpoint")
 	defer _self.ffiObject.decrementPointer()
-	uniffiRustCallAsync[struct{}](
-		nil,
+	_, err := uniffiRustCallAsync[Error](
+		FfiConverterErrorINSTANCE,
 		// completeFn
 		func(handle C.uint64_t, status *C.RustCallStatus) struct{} {
 			C.ffi_iroh_streamplace_rust_future_complete_void(handle, status)
@@ -1299,6 +1311,7 @@ func (_self *SenderEndpoint) AddPeer(addr *NodeAddr) {
 		},
 	)
 
+	return err
 }
 
 func (_self *SenderEndpoint) NodeAddr() *NodeAddr {
@@ -1330,11 +1343,11 @@ func (_self *SenderEndpoint) NodeAddr() *NodeAddr {
 	return res
 }
 
-func (_self *SenderEndpoint) Send(nodeId *PublicKey, data []byte) {
+func (_self *SenderEndpoint) Send(nodeId *PublicKey, data []byte) *Error {
 	_pointer := _self.ffiObject.incrementPointer("*SenderEndpoint")
 	defer _self.ffiObject.decrementPointer()
-	uniffiRustCallAsync[struct{}](
-		nil,
+	_, err := uniffiRustCallAsync[Error](
+		FfiConverterErrorINSTANCE,
 		// completeFn
 		func(handle C.uint64_t, status *C.RustCallStatus) struct{} {
 			C.ffi_iroh_streamplace_rust_future_complete_void(handle, status)
@@ -1354,6 +1367,7 @@ func (_self *SenderEndpoint) Send(nodeId *PublicKey, data []byte) {
 		},
 	)
 
+	return err
 }
 func (object *SenderEndpoint) Destroy() {
 	runtime.SetFinalizer(object, nil)
@@ -1402,6 +1416,307 @@ type FfiDestroyerSenderEndpoint struct{}
 
 func (_ FfiDestroyerSenderEndpoint) Destroy(value *SenderEndpoint) {
 	value.Destroy()
+}
+
+// An Error.
+type Error struct {
+	err error
+}
+
+// Convience method to turn *Error into error
+// Avoiding treating nil pointer as non nil error interface
+func (err *Error) AsError() error {
+	if err == nil {
+		return nil
+	} else {
+		return err
+	}
+}
+
+func (err Error) Error() string {
+	return fmt.Sprintf("Error: %s", err.err.Error())
+}
+
+func (err Error) Unwrap() error {
+	return err.err
+}
+
+// Err* are used for checking error type with `errors.Is`
+var ErrErrorIrohBind = fmt.Errorf("ErrorIrohBind")
+var ErrErrorInvalidUrl = fmt.Errorf("ErrorInvalidUrl")
+var ErrErrorIrohConnect = fmt.Errorf("ErrorIrohConnect")
+var ErrErrorInvalidNetworkAddress = fmt.Errorf("ErrorInvalidNetworkAddress")
+var ErrErrorOpenStream = fmt.Errorf("ErrorOpenStream")
+var ErrErrorSendMessage = fmt.Errorf("ErrorSendMessage")
+var ErrErrorNewConnection = fmt.Errorf("ErrorNewConnection")
+var ErrErrorMissingConnection = fmt.Errorf("ErrorMissingConnection")
+var ErrErrorInvalidPublicKey = fmt.Errorf("ErrorInvalidPublicKey")
+
+// Variant structs
+type ErrorIrohBind struct {
+	message string
+}
+
+func NewErrorIrohBind() *Error {
+	return &Error{err: &ErrorIrohBind{}}
+}
+
+func (e ErrorIrohBind) destroy() {
+}
+
+func (err ErrorIrohBind) Error() string {
+	return fmt.Sprintf("IrohBind: %s", err.message)
+}
+
+func (self ErrorIrohBind) Is(target error) bool {
+	return target == ErrErrorIrohBind
+}
+
+type ErrorInvalidUrl struct {
+	message string
+}
+
+func NewErrorInvalidUrl() *Error {
+	return &Error{err: &ErrorInvalidUrl{}}
+}
+
+func (e ErrorInvalidUrl) destroy() {
+}
+
+func (err ErrorInvalidUrl) Error() string {
+	return fmt.Sprintf("InvalidUrl: %s", err.message)
+}
+
+func (self ErrorInvalidUrl) Is(target error) bool {
+	return target == ErrErrorInvalidUrl
+}
+
+type ErrorIrohConnect struct {
+	message string
+}
+
+func NewErrorIrohConnect() *Error {
+	return &Error{err: &ErrorIrohConnect{}}
+}
+
+func (e ErrorIrohConnect) destroy() {
+}
+
+func (err ErrorIrohConnect) Error() string {
+	return fmt.Sprintf("IrohConnect: %s", err.message)
+}
+
+func (self ErrorIrohConnect) Is(target error) bool {
+	return target == ErrErrorIrohConnect
+}
+
+type ErrorInvalidNetworkAddress struct {
+	message string
+}
+
+func NewErrorInvalidNetworkAddress() *Error {
+	return &Error{err: &ErrorInvalidNetworkAddress{}}
+}
+
+func (e ErrorInvalidNetworkAddress) destroy() {
+}
+
+func (err ErrorInvalidNetworkAddress) Error() string {
+	return fmt.Sprintf("InvalidNetworkAddress: %s", err.message)
+}
+
+func (self ErrorInvalidNetworkAddress) Is(target error) bool {
+	return target == ErrErrorInvalidNetworkAddress
+}
+
+type ErrorOpenStream struct {
+	message string
+}
+
+func NewErrorOpenStream() *Error {
+	return &Error{err: &ErrorOpenStream{}}
+}
+
+func (e ErrorOpenStream) destroy() {
+}
+
+func (err ErrorOpenStream) Error() string {
+	return fmt.Sprintf("OpenStream: %s", err.message)
+}
+
+func (self ErrorOpenStream) Is(target error) bool {
+	return target == ErrErrorOpenStream
+}
+
+type ErrorSendMessage struct {
+	message string
+}
+
+func NewErrorSendMessage() *Error {
+	return &Error{err: &ErrorSendMessage{}}
+}
+
+func (e ErrorSendMessage) destroy() {
+}
+
+func (err ErrorSendMessage) Error() string {
+	return fmt.Sprintf("SendMessage: %s", err.message)
+}
+
+func (self ErrorSendMessage) Is(target error) bool {
+	return target == ErrErrorSendMessage
+}
+
+type ErrorNewConnection struct {
+	message string
+}
+
+func NewErrorNewConnection() *Error {
+	return &Error{err: &ErrorNewConnection{}}
+}
+
+func (e ErrorNewConnection) destroy() {
+}
+
+func (err ErrorNewConnection) Error() string {
+	return fmt.Sprintf("NewConnection: %s", err.message)
+}
+
+func (self ErrorNewConnection) Is(target error) bool {
+	return target == ErrErrorNewConnection
+}
+
+type ErrorMissingConnection struct {
+	message string
+}
+
+func NewErrorMissingConnection() *Error {
+	return &Error{err: &ErrorMissingConnection{}}
+}
+
+func (e ErrorMissingConnection) destroy() {
+}
+
+func (err ErrorMissingConnection) Error() string {
+	return fmt.Sprintf("MissingConnection: %s", err.message)
+}
+
+func (self ErrorMissingConnection) Is(target error) bool {
+	return target == ErrErrorMissingConnection
+}
+
+type ErrorInvalidPublicKey struct {
+	message string
+}
+
+func NewErrorInvalidPublicKey() *Error {
+	return &Error{err: &ErrorInvalidPublicKey{}}
+}
+
+func (e ErrorInvalidPublicKey) destroy() {
+}
+
+func (err ErrorInvalidPublicKey) Error() string {
+	return fmt.Sprintf("InvalidPublicKey: %s", err.message)
+}
+
+func (self ErrorInvalidPublicKey) Is(target error) bool {
+	return target == ErrErrorInvalidPublicKey
+}
+
+type FfiConverterError struct{}
+
+var FfiConverterErrorINSTANCE = FfiConverterError{}
+
+func (c FfiConverterError) Lift(eb RustBufferI) *Error {
+	return LiftFromRustBuffer[*Error](c, eb)
+}
+
+func (c FfiConverterError) Lower(value *Error) C.RustBuffer {
+	return LowerIntoRustBuffer[*Error](c, value)
+}
+
+func (c FfiConverterError) Read(reader io.Reader) *Error {
+	errorID := readUint32(reader)
+
+	message := FfiConverterStringINSTANCE.Read(reader)
+	switch errorID {
+	case 1:
+		return &Error{&ErrorIrohBind{message}}
+	case 2:
+		return &Error{&ErrorInvalidUrl{message}}
+	case 3:
+		return &Error{&ErrorIrohConnect{message}}
+	case 4:
+		return &Error{&ErrorInvalidNetworkAddress{message}}
+	case 5:
+		return &Error{&ErrorOpenStream{message}}
+	case 6:
+		return &Error{&ErrorSendMessage{message}}
+	case 7:
+		return &Error{&ErrorNewConnection{message}}
+	case 8:
+		return &Error{&ErrorMissingConnection{message}}
+	case 9:
+		return &Error{&ErrorInvalidPublicKey{message}}
+	default:
+		panic(fmt.Sprintf("Unknown error code %d in FfiConverterError.Read()", errorID))
+	}
+
+}
+
+func (c FfiConverterError) Write(writer io.Writer, value *Error) {
+	switch variantValue := value.err.(type) {
+	case *ErrorIrohBind:
+		writeInt32(writer, 1)
+	case *ErrorInvalidUrl:
+		writeInt32(writer, 2)
+	case *ErrorIrohConnect:
+		writeInt32(writer, 3)
+	case *ErrorInvalidNetworkAddress:
+		writeInt32(writer, 4)
+	case *ErrorOpenStream:
+		writeInt32(writer, 5)
+	case *ErrorSendMessage:
+		writeInt32(writer, 6)
+	case *ErrorNewConnection:
+		writeInt32(writer, 7)
+	case *ErrorMissingConnection:
+		writeInt32(writer, 8)
+	case *ErrorInvalidPublicKey:
+		writeInt32(writer, 9)
+	default:
+		_ = variantValue
+		panic(fmt.Sprintf("invalid error value `%v` in FfiConverterError.Write", value))
+	}
+}
+
+type FfiDestroyerError struct{}
+
+func (_ FfiDestroyerError) Destroy(value *Error) {
+	switch variantValue := value.err.(type) {
+	case ErrorIrohBind:
+		variantValue.destroy()
+	case ErrorInvalidUrl:
+		variantValue.destroy()
+	case ErrorIrohConnect:
+		variantValue.destroy()
+	case ErrorInvalidNetworkAddress:
+		variantValue.destroy()
+	case ErrorOpenStream:
+		variantValue.destroy()
+	case ErrorSendMessage:
+		variantValue.destroy()
+	case ErrorNewConnection:
+		variantValue.destroy()
+	case ErrorMissingConnection:
+		variantValue.destroy()
+	case ErrorInvalidPublicKey:
+		variantValue.destroy()
+	default:
+		_ = variantValue
+		panic(fmt.Sprintf("invalid error value `%v` in FfiDestroyerError.Destroy", value))
+	}
 }
 
 type FfiConverterOptionalString struct{}
