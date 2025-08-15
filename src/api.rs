@@ -63,7 +63,7 @@ struct Actor {
 
 #[derive(Debug)]
 struct Connection {
-    id: NodeId,
+    _id: NodeId,
     rpc: Client<Protocol>,
 }
 
@@ -139,7 +139,7 @@ impl Actor {
 
                                 let conn = Connection {
                                     rpc: Client::boxed(conn),
-                                    id: *remote,
+                                    _id: *remote,
                                 };
                                 self.connections.insert(*remote, conn);
                             }

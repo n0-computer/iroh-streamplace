@@ -40,6 +40,7 @@ impl Receiver {
         })
     }
 
+    /// Subscribe to the given topic on the remote.
     #[uniffi::method(async_runtime = "tokio")]
     pub async fn subscribe(&self, remote_id: Arc<PublicKey>, topic: &str) -> Result<(), Error> {
         let remote_id: iroh::NodeId = remote_id.as_ref().into();
@@ -49,6 +50,7 @@ impl Receiver {
         Ok(())
     }
 
+    /// Unsubscribe from this topic on the remote.
     #[uniffi::method(async_runtime = "tokio")]
     pub async fn unsubscribe(&self, remote_id: Arc<PublicKey>, topic: &str) -> Result<(), Error> {
         let remote_id: iroh::NodeId = remote_id.as_ref().into();

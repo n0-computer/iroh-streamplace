@@ -443,7 +443,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_iroh_streamplace_checksum_method_receiver_subscribe()
 		})
-		if checksum != 5641 {
+		if checksum != 24145 {
 			// If this happens try cleaning and rebuilding your project
 			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_receiver_subscribe: UniFFI API checksum mismatch")
 		}
@@ -452,7 +452,7 @@ func uniffiCheckChecksums() {
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_iroh_streamplace_checksum_method_receiver_unsubscribe()
 		})
-		if checksum != 10033 {
+		if checksum != 21760 {
 			// If this happens try cleaning and rebuilding your project
 			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_receiver_unsubscribe: UniFFI API checksum mismatch")
 		}
@@ -1282,7 +1282,9 @@ func (_ FfiDestroyerPublicKey) Destroy(value *PublicKey) {
 
 type ReceiverInterface interface {
 	NodeAddr() *NodeAddr
+	// Subscribe to the given topic on the remote.
 	Subscribe(remoteId *PublicKey, topic string) *Error
+	// Unsubscribe from this topic on the remote.
 	Unsubscribe(remoteId *PublicKey, topic string) *Error
 }
 type Receiver struct {
@@ -1345,6 +1347,7 @@ func (_self *Receiver) NodeAddr() *NodeAddr {
 	return res
 }
 
+// Subscribe to the given topic on the remote.
 func (_self *Receiver) Subscribe(remoteId *PublicKey, topic string) *Error {
 	_pointer := _self.ffiObject.incrementPointer("*Receiver")
 	defer _self.ffiObject.decrementPointer()
@@ -1372,6 +1375,7 @@ func (_self *Receiver) Subscribe(remoteId *PublicKey, topic string) *Error {
 	return err
 }
 
+// Unsubscribe from this topic on the remote.
 func (_self *Receiver) Unsubscribe(remoteId *PublicKey, topic string) *Error {
 	_pointer := _self.ffiObject.incrementPointer("*Receiver")
 	defer _self.ffiObject.decrementPointer()
