@@ -1,6 +1,5 @@
 use iroh::Watcher;
 
-use crate::ALPN;
 use crate::error::Error;
 use crate::utils::NodeAddr;
 
@@ -17,7 +16,6 @@ impl Endpoint {
         let endpoint = iroh::Endpoint::builder()
             .discovery_n0()
             .discovery_local_network()
-            .alpns(vec![ALPN.to_vec()])
             .bind()
             .await?;
 

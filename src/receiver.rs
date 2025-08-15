@@ -1,9 +1,8 @@
 use std::sync::Arc;
 
-use n0_future::task::{self, AbortOnDropHandle};
-use tokio::task::JoinSet;
-use tracing::{debug, warn};
+use iroh::protocol::Router;
 
+use crate::api::Api;
 use crate::endpoint::Endpoint;
 use crate::error::Error;
 use crate::key::PublicKey;
@@ -12,7 +11,8 @@ use crate::utils::NodeAddr;
 #[derive(uniffi::Object)]
 pub struct Receiver {
     endpoint: Endpoint,
-    _handle: AbortOnDropHandle<()>,
+    _api: Api,
+    _router: iroh::protocol::Router,
 }
 
 #[uniffi::export]
@@ -23,48 +23,30 @@ impl Receiver {
         endpoint: &Endpoint,
         handler: Arc<dyn DataHandler>,
     ) -> Result<Receiver, Error> {
-        let ep = endpoint.endpoint.clone();
-        let handle = task::spawn(async move {
-            let mut tasks = JoinSet::default();
-
-            while let Some(incoming) = ep.accept().await {
-                let handler = handler.clone();
-                tasks.spawn(async move {
-                    let Ok(conn) = incoming.await else {
-                        return;
-                    };
-                    let peer = Arc::new(PublicKey::from(
-                        conn.remote_node_id().expect("invalid remote"),
-                    ));
-                    let conn = match imsg::Connection::new(conn).await {
-                        Ok(conn) => conn,
-                        Err(err) => {
-                            warn!("imsg connection failed: {:?}", err);
-                            return;
-                        }
-                    };
-
-                    while let Ok(stream) = conn.accept_stream().await {
-                        debug!("accepted stream");
-                        if let Ok(msg) = stream.recv_msg().await {
-                            debug!("received msg {} bytes", msg.len());
-                            handler
-                                .clone()
-                                .handle_data(peer.clone(), msg.to_vec())
-                                .await;
-                        }
-                    }
-                });
-            }
-
-            // cleanup
-            tasks.abort_all();
+        let api = Api::spawn_with_handler(&endpoint.endpoint, move |id, data| {
+            let handler = handler.clone();
+            Box::pin(async move {
+                handler.handle_data(id, data).await;
+            })
         });
+        let router = Router::builder(endpoint.endpoint.clone())
+            .accept(Api::ALPN, api.expose())
+            .spawn();
 
         Ok(Receiver {
             endpoint: endpoint.clone(),
-            _handle: AbortOnDropHandle::new(handle),
+            _api: api,
+            _router: router,
         })
+    }
+
+    #[uniffi::method(async_runtime = "tokio")]
+    pub async fn subscribe(&self, remote_id: Arc<PublicKey>, topic: &str) -> Result<(), Error> {
+        let remote_id: iroh::NodeId = remote_id.as_ref().into();
+        let api = Api::connect(self.endpoint.endpoint.clone(), remote_id);
+        api.subscribe(topic.to_string(), self.endpoint.endpoint.node_id())
+            .await?;
+        Ok(())
     }
 
     #[uniffi::method(async_runtime = "tokio")]
@@ -76,7 +58,7 @@ impl Receiver {
 #[uniffi::export(with_foreign)]
 #[async_trait::async_trait]
 pub trait DataHandler: Send + Sync {
-    async fn handle_data(&self, peer: Arc<PublicKey>, data: Vec<u8>);
+    async fn handle_data(&self, topic: String, data: Vec<u8>);
 }
 
 #[cfg(test)]
@@ -99,16 +81,13 @@ mod tests {
 
         #[derive(Debug, Clone)]
         struct TestHandler {
-            messages: tokio::sync::mpsc::Sender<(PublicKey, Vec<u8>)>,
+            messages: tokio::sync::mpsc::Sender<(String, Vec<u8>)>,
         }
 
         #[async_trait::async_trait]
         impl DataHandler for TestHandler {
-            async fn handle_data(&self, peer: Arc<PublicKey>, data: Vec<u8>) {
-                self.messages
-                    .send((peer.as_ref().clone(), data))
-                    .await
-                    .unwrap();
+            async fn handle_data(&self, topic: String, data: Vec<u8>) {
+                self.messages.send((topic, data)).await.unwrap();
             }
         }
 
@@ -118,26 +97,27 @@ mod tests {
             .await
             .unwrap();
 
+        let sender_addr = sender.node_addr().await;
+        println!("sender addr: {:?}", sender_addr);
+
         let receiver_addr = receiver.node_addr().await;
         println!("recv addr: {:?}", receiver_addr);
-        let receiver_id = receiver_addr.node_id();
 
-        // add peer
-        sender
-            .add_peer(&NodeAddr::new(&receiver_id, None, Vec::new()))
+        // subscribe
+        receiver
+            .subscribe(Arc::new(sender_addr.node_id()), "foo")
             .await
             .unwrap();
 
         // send a few messages
         for i in 0u8..5 {
-            sender.send(&receiver_id, &[i, 0, 0, 0]).await.unwrap();
+            sender.send("foo", &[i, 0, 0, 0]).await.unwrap();
         }
 
         // make sure the receiver got them
-        let sender_id = sender.node_addr().await.node_id();
         for i in 0u8..5 {
-            let (id, msg) = r.recv().await.unwrap();
-            assert_eq!(id, sender_id);
+            let (topic, msg) = r.recv().await.unwrap();
+            assert_eq!(topic, "foo");
             assert_eq!(msg, vec![i, 0, 0, 0]);
         }
     }

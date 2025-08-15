@@ -380,14 +380,14 @@ static void call_UniffiForeignFutureCompleteVoid(
 #endif
 #ifndef UNIFFI_FFIDEF_CALLBACK_INTERFACE_DATA_HANDLER_METHOD0
 #define UNIFFI_FFIDEF_CALLBACK_INTERFACE_DATA_HANDLER_METHOD0
-typedef void (*UniffiCallbackInterfaceDataHandlerMethod0)(uint64_t uniffi_handle, void* peer, RustBuffer data, UniffiForeignFutureCompleteVoid uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return);
+typedef void (*UniffiCallbackInterfaceDataHandlerMethod0)(uint64_t uniffi_handle, RustBuffer topic, RustBuffer data, UniffiForeignFutureCompleteVoid uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return);
 
 // Making function static works arround:
 // https://github.com/golang/go/issues/11263
 static void call_UniffiCallbackInterfaceDataHandlerMethod0(
-				UniffiCallbackInterfaceDataHandlerMethod0 cb, uint64_t uniffi_handle, void* peer, RustBuffer data, UniffiForeignFutureCompleteVoid uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return)
+				UniffiCallbackInterfaceDataHandlerMethod0 cb, uint64_t uniffi_handle, RustBuffer topic, RustBuffer data, UniffiForeignFutureCompleteVoid uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return)
 {
-	return cb(uniffi_handle, peer, data, uniffi_future_callback, uniffi_callback_data, uniffi_out_return);
+	return cb(uniffi_handle, topic, data, uniffi_future_callback, uniffi_callback_data, uniffi_out_return);
 }
 
 
@@ -417,7 +417,7 @@ void uniffi_iroh_streamplace_fn_init_callback_vtable_datahandler(UniffiVTableCal
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_DATAHANDLER_HANDLE_DATA
 #define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_DATAHANDLER_HANDLE_DATA
-uint64_t uniffi_iroh_streamplace_fn_method_datahandler_handle_data(void* ptr, void* peer, RustBuffer data
+uint64_t uniffi_iroh_streamplace_fn_method_datahandler_handle_data(void* ptr, RustBuffer topic, RustBuffer data
 );
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_ENDPOINT
@@ -536,6 +536,11 @@ uint64_t uniffi_iroh_streamplace_fn_constructor_receiver_new(void* endpoint, voi
 uint64_t uniffi_iroh_streamplace_fn_method_receiver_node_addr(void* ptr
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_RECEIVER_SUBSCRIBE
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_RECEIVER_SUBSCRIBE
+uint64_t uniffi_iroh_streamplace_fn_method_receiver_subscribe(void* ptr, void* remote_id, RustBuffer topic
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_SENDER
 #define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_SENDER
 void* uniffi_iroh_streamplace_fn_clone_sender(void* ptr, RustCallStatus *out_status
@@ -551,11 +556,6 @@ void uniffi_iroh_streamplace_fn_free_sender(void* ptr, RustCallStatus *out_statu
 uint64_t uniffi_iroh_streamplace_fn_constructor_sender_new(void* endpoint
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDER_ADD_PEER
-#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDER_ADD_PEER
-uint64_t uniffi_iroh_streamplace_fn_method_sender_add_peer(void* ptr, void* addr
-);
-#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDER_NODE_ADDR
 #define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDER_NODE_ADDR
 uint64_t uniffi_iroh_streamplace_fn_method_sender_node_addr(void* ptr
@@ -563,7 +563,7 @@ uint64_t uniffi_iroh_streamplace_fn_method_sender_node_addr(void* ptr
 #endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDER_SEND
 #define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_SENDER_SEND
-uint64_t uniffi_iroh_streamplace_fn_method_sender_send(void* ptr, void* node_id, RustBuffer data
+uint64_t uniffi_iroh_streamplace_fn_method_sender_send(void* ptr, RustBuffer key, RustBuffer data
 );
 #endif
 #ifndef UNIFFI_FFIDEF_FFI_IROH_STREAMPLACE_RUSTBUFFER_ALLOC
@@ -906,9 +906,9 @@ uint16_t uniffi_iroh_streamplace_checksum_method_receiver_node_addr(void
     
 );
 #endif
-#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_SENDER_ADD_PEER
-#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_SENDER_ADD_PEER
-uint16_t uniffi_iroh_streamplace_checksum_method_sender_add_peer(void
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_RECEIVER_SUBSCRIBE
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_RECEIVER_SUBSCRIBE
+uint16_t uniffi_iroh_streamplace_checksum_method_receiver_subscribe(void
     
 );
 #endif
@@ -967,7 +967,7 @@ uint32_t ffi_iroh_streamplace_uniffi_contract_version(void
 );
 #endif
 
- void iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerMethod0(uint64_t uniffi_handle, void* peer, RustBuffer data, UniffiForeignFutureCompleteVoid uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return);
+ void iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerMethod0(uint64_t uniffi_handle, RustBuffer topic, RustBuffer data, UniffiForeignFutureCompleteVoid uniffi_future_callback, uint64_t uniffi_callback_data, UniffiForeignFuture* uniffi_out_return);
  void iroh_streamplace_cgo_dispatchCallbackInterfaceDataHandlerFree(uint64_t handle);
 
 void iroh_streamplace_uniffiFutureContinuationCallback(uint64_t, int8_t);

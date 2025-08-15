@@ -13,14 +13,10 @@ pub enum Error {
     },
     #[snafu(display("Invalid network address"), context(false))]
     InvalidNetworkAddress { source: std::net::AddrParseError },
-    #[snafu(display("Failed to open stream"))]
-    OpenStream { source: anyhow::Error },
-    #[snafu(display("Failed to send message"))]
-    SendMessage { source: imsg::StreamError },
-    #[snafu(display("Failed to create connection"))]
-    NewConnection { source: anyhow::Error },
     #[snafu(display("No connection available"))]
     MissingConnection,
     #[snafu(display("Invalid public key"))]
     InvalidPublicKey,
+    #[snafu(display("RPC error"), context(false))]
+    Irpc { source: irpc::Error },
 }
