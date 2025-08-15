@@ -450,6 +450,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_iroh_streamplace_checksum_method_receiver_unsubscribe()
+		})
+		if checksum != 10033 {
+			// If this happens try cleaning and rebuilding your project
+			panic("iroh_streamplace: uniffi_iroh_streamplace_checksum_method_receiver_unsubscribe: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(_uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_iroh_streamplace_checksum_method_sender_node_addr()
 		})
 		if checksum != 38541 {
@@ -1274,6 +1283,7 @@ func (_ FfiDestroyerPublicKey) Destroy(value *PublicKey) {
 type ReceiverInterface interface {
 	NodeAddr() *NodeAddr
 	Subscribe(remoteId *PublicKey, topic string) *Error
+	Unsubscribe(remoteId *PublicKey, topic string) *Error
 }
 type Receiver struct {
 	ffiObject FfiObject
@@ -1348,6 +1358,33 @@ func (_self *Receiver) Subscribe(remoteId *PublicKey, topic string) *Error {
 		// liftFn
 		func(_ struct{}) struct{} { return struct{}{} },
 		C.uniffi_iroh_streamplace_fn_method_receiver_subscribe(
+			_pointer, FfiConverterPublicKeyINSTANCE.Lower(remoteId), FfiConverterStringINSTANCE.Lower(topic)),
+		// pollFn
+		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_poll_void(handle, continuation, data)
+		},
+		// freeFn
+		func(handle C.uint64_t) {
+			C.ffi_iroh_streamplace_rust_future_free_void(handle)
+		},
+	)
+
+	return err
+}
+
+func (_self *Receiver) Unsubscribe(remoteId *PublicKey, topic string) *Error {
+	_pointer := _self.ffiObject.incrementPointer("*Receiver")
+	defer _self.ffiObject.decrementPointer()
+	_, err := uniffiRustCallAsync[Error](
+		FfiConverterErrorINSTANCE,
+		// completeFn
+		func(handle C.uint64_t, status *C.RustCallStatus) struct{} {
+			C.ffi_iroh_streamplace_rust_future_complete_void(handle, status)
+			return struct{}{}
+		},
+		// liftFn
+		func(_ struct{}) struct{} { return struct{}{} },
+		C.uniffi_iroh_streamplace_fn_method_receiver_unsubscribe(
 			_pointer, FfiConverterPublicKeyINSTANCE.Lower(remoteId), FfiConverterStringINSTANCE.Lower(topic)),
 		// pollFn
 		func(handle C.uint64_t, continuation C.UniffiRustFutureContinuationCallback, data C.uint64_t) {

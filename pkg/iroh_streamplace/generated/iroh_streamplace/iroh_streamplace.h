@@ -541,6 +541,11 @@ uint64_t uniffi_iroh_streamplace_fn_method_receiver_node_addr(void* ptr
 uint64_t uniffi_iroh_streamplace_fn_method_receiver_subscribe(void* ptr, void* remote_id, RustBuffer topic
 );
 #endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_RECEIVER_UNSUBSCRIBE
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_METHOD_RECEIVER_UNSUBSCRIBE
+uint64_t uniffi_iroh_streamplace_fn_method_receiver_unsubscribe(void* ptr, void* remote_id, RustBuffer topic
+);
+#endif
 #ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_SENDER
 #define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_FN_CLONE_SENDER
 void* uniffi_iroh_streamplace_fn_clone_sender(void* ptr, RustCallStatus *out_status
@@ -909,6 +914,12 @@ uint16_t uniffi_iroh_streamplace_checksum_method_receiver_node_addr(void
 #ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_RECEIVER_SUBSCRIBE
 #define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_RECEIVER_SUBSCRIBE
 uint16_t uniffi_iroh_streamplace_checksum_method_receiver_subscribe(void
+    
+);
+#endif
+#ifndef UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_RECEIVER_UNSUBSCRIBE
+#define UNIFFI_FFIDEF_UNIFFI_IROH_STREAMPLACE_CHECKSUM_METHOD_RECEIVER_UNSUBSCRIBE
+uint16_t uniffi_iroh_streamplace_checksum_method_receiver_unsubscribe(void
     
 );
 #endif

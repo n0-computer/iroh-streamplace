@@ -18,6 +18,14 @@ struct Subscribe {
     remote_id: NodeId,
 }
 
+/// Unsubscribe from the given `key`
+#[derive(Debug, Serialize, Deserialize)]
+struct Unsubscribe {
+    key: String,
+    // TODO: verify
+    remote_id: NodeId,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 struct SendSegment {
     key: String,
@@ -37,6 +45,8 @@ struct RecvSegment {
 enum Protocol {
     #[rpc(tx=oneshot::Sender<()>)]
     Subscribe(Subscribe),
+    #[rpc(tx=oneshot::Sender<()>)]
+    Unsubscribe(Unsubscribe),
     #[rpc(tx=oneshot::Sender<()>)]
     SendSegment(SendSegment),
     #[rpc(tx=oneshot::Sender<()>)]
@@ -92,6 +102,16 @@ impl Actor {
                     .entry(inner.key)
                     .or_default()
                     .insert(inner.remote_id);
+
+                tx.send(()).await.ok();
+            }
+            Message::Unsubscribe(sub) => {
+                debug!("unsubscribe {:?}", sub);
+                let WithChannels { tx, inner, .. } = sub;
+
+                if let Some(e) = self.subscriptions.get_mut(&inner.key) {
+                    e.remove(&inner.remote_id);
+                }
 
                 tx.send(()).await.ok();
             }
@@ -183,6 +203,15 @@ impl Api {
     pub(crate) async fn subscribe(&self, key: String, self_id: NodeId) -> irpc::Result<()> {
         self.inner
             .rpc(Subscribe {
+                key,
+                remote_id: self_id,
+            })
+            .await
+    }
+
+    pub(crate) async fn unsubscribe(&self, key: String, self_id: NodeId) -> irpc::Result<()> {
+        self.inner
+            .rpc(Unsubscribe {
                 key,
                 remote_id: self_id,
             })

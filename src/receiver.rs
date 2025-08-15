@@ -50,6 +50,15 @@ impl Receiver {
     }
 
     #[uniffi::method(async_runtime = "tokio")]
+    pub async fn unsubscribe(&self, remote_id: Arc<PublicKey>, topic: &str) -> Result<(), Error> {
+        let remote_id: iroh::NodeId = remote_id.as_ref().into();
+        let api = Api::connect(self.endpoint.endpoint.clone(), remote_id);
+        api.unsubscribe(topic.to_string(), self.endpoint.endpoint.node_id())
+            .await?;
+        Ok(())
+    }
+
+    #[uniffi::method(async_runtime = "tokio")]
     pub async fn node_addr(&self) -> NodeAddr {
         self.endpoint.node_addr().await
     }
@@ -120,5 +129,21 @@ mod tests {
             assert_eq!(topic, "foo");
             assert_eq!(msg, vec![i, 0, 0, 0]);
         }
+
+        // unsubscribe
+        receiver
+            .unsubscribe(Arc::new(sender_addr.node_id()), "foo")
+            .await
+            .unwrap();
+
+        // send a message, shouldn't error
+        sender.send("foo", &[1]).await.unwrap();
+
+        // no message received, times out
+        let res = tokio::time::timeout(std::time::Duration::from_millis(200), async {
+            r.recv().await.unwrap();
+        })
+        .await;
+        assert!(res.is_err());
     }
 }
